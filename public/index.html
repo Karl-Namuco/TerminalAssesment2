@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>TerminalAssesment-2</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <div class="control-panel">
+    <h1>Smart Home - Mini Assistant</h1>
+
+    <div class="switch-row">
+      <label class="switch">
+        <input id="switch1" type="checkbox" />
+        <span class="slider round"></span>
+      </label>
+      <span class="switchLabel">Outdoor Lights</span>
+    </div>
+    <div class="switch-row">
+      <label class="switch">
+        <input id="switch2" type="checkbox" />
+        <span class="slider round"></span>
+      </label>
+      <span class="switchLabel">Living Room</span>
+    </div>
+    <div class="switch-row">
+      <label class="switch">
+        <input id="switch3" type="checkbox" />
+        <span class="slider round"></span>
+      </label>
+      <span class="switchLabel">Bedroom 1</span>
+    </div>
+    <div class="switch-row">
+      <label class="switch">
+        <input id="switch4" type="checkbox" />
+        <span class="slider round"></span>
+      </label>
+      <span class="switchLabel">Bedroom 2</span>
+    </div>
+
+    <div class="switch-row">
+      <span class="switchLabel">MQ2 Gas: <span id="mq2-value">Loading...</span></span>
+    </div>
+    <div class="switch-row">
+      <span class="switchLabel">Air Quality (MQ135): <span id="mq135-value">Loading...</span></span>
+    </div>
+    <div class="switch-row">
+      <span class="switchLabel">Gas Status: <span id="gas-status">Loading...</span></span>
+    </div>
+    <div class="switch-row">
+      <span class="switchLabel">Air Quality: <span id="air-status">Loading...</span></span>
+    </div>
+  </div>
+
+  <!-- Firebase scripts -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-database.js"></script>
+  <script>
+    // Firebase configuration
+    var firebaseConfig = {
+      apiKey: "AIzaSyDKrXQ6uhls78U4gqFs0vKfPeme8wkvh2c",
+      authDomain: "terminalassesment2-aad1d.firebaseapp.com",
+      databaseURL: "https://terminalassesment2-aad1d-default-rtdb.asia-southeast1.firebasedatabase.app",
+      projectId: "terminalassesment2-aad1d",
+      storageBucket: "terminalassesment2-aad1d.appspot.com",
+      messagingSenderId: "721806307723",
+      appId: "1:721806307723:web:4c20eda24a934fd4243f8e"
+    };
+
+    // Initialize Firebase
+    firebase.initializeApp(firebaseConfig);
+    var database = firebase.database();
+
+    // Add event listeners to all switches for Firebase and label color
+    [1, 2, 3, 4].forEach(num => {
+      const sw = document.getElementById('switch' + num);
+      const label = sw.parentElement.nextElementSibling;
+      sw.addEventListener('change', function() {
+        setLED('led' + num, sw.checked);
+        if (sw.checked) {
+          label.classList.add('on');
+        } else {
+          label.classList.remove('on');
+        }
+      });
+    });
+
+    function setLED(led, state) {
+      database.ref(led).set(state)
+        .then(() => console.log(led + " set to " + state))
+        .catch((error) => console.error("Failed to set " + led + ":", error));
+    }
+
+    // Sensor data update
+    function updateSensorData() {
+      database.ref("/sensor/mq2").on("value", snapshot => {
+        document.getElementById("mq2-value").innerText = snapshot.val();
+      });
+
+      database.ref("/sensor/mq135").on("value", snapshot => {
+        document.getElementById("mq135-value").innerText = snapshot.val();
+      });
+
+      database.ref("/sensor/gas_status").on("value", snapshot => {
+        const value = snapshot.val();
+        const el = document.getElementById("gas-status");
+        el.innerText = value;
+        el.style.color = (value === "Danger") ? "red" : "green";
+      });
+
+      database.ref("/sensor/air_status").on("value", snapshot => {
+        const value = snapshot.val();
+        const el = document.getElementById("air-status");
+        el.innerText = value;
+        el.style.color = (value === "Clean") ? "green" : "orange";
+      });
+    }
+
+    window.onload = function() {
+      updateSensorData();
+    };
+  </script>
+</body>
+</html>
