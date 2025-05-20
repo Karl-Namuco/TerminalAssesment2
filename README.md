@@ -1,4 +1,4 @@
-  Smart Home - Mini Assistant
+   Smart Home - Mini Assistant
 
 A web-based smart home assistant that enables remote control of household lights and monitors gas and air quality using IoT devices and Firebase.
 
