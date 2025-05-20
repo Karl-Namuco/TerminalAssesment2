@@ -16,23 +16,21 @@
       padding: 0;
     }
 
-    /* Main container to hold header and controls */
+  
     .control-panel {
       display: flex;
       flex-direction: column;
       align-items: center;
-      justify-content: center; /* Add this for vertical centering inside the panel */
+      justify-content: center;
       min-width: 350px;
       min-height: 60vh;
     }
 
-    /* Header style */
     h1 {
       color: #92a9a9;
       margin-bottom: 30px;
     }
 
-    /* Row container for each switch and its labels */
     .switch-row {
       display: flex;
       align-items: center;
