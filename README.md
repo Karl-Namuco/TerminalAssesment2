@@ -23,7 +23,7 @@ Features
 
 System Architecture
 
-1. **ESP8266 NodeMCU** collects data from MQ2 and MQ135 sensors.
+1. ESP32 collects data from MQ2 and MQ135 sensors.
 2. Sensor data and light states are sent to **Firebase Realtime Database**.
 3. A **web interface** (HTML/CSS/JS) reads and writes data to Firebase.
 4. Users can toggle switches from the browser to turn on/off lights.
